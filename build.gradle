@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.4.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'org.openapi.generator' version '5.1.0'
 }
 
 group = 'com.radub'
@@ -18,15 +19,39 @@ repositories {
 	mavenCentral()
 }
 
+
+openApiGenerate {
+	generatorName = "java"   
+    inputSpec = "$rootDir/open-banking-api.yaml".toString()
+    outputDir = "$buildDir/java".toString()
+    apiPackage = "com.radub.openbanking.api"
+    invokerPackage = "com.radub.openbanking.invoker"
+    modelPackage = "com.radub.openbanking.models"
+    configOptions = [
+            dateLibrary: "joda"
+    ]
+    globalProperties = [
+            modelDocs: "false"
+    ]
+    skipValidateSpec = true
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation group: 'org.threeten', name: 'threetenbp', version: '0.7.2'
+	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'	
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'junit:junit:4.12'
-	testImplementation 'io.rest-assured:rest-assured'
-	testImplementation 'io.rest-assured:spring-mock-mvc'
-	testImplementation 'io.rest-assured:json-schema-validator'
+	testImplementation 'junit:junit:4.12'	
+	testImplementation 'io.rest-assured:rest-assured:4.2.1'
+	testImplementation 'io.rest-assured:spring-mock-mvc:4.2.1'
+	testImplementation 'io.rest-assured:json-schema-validator:4.2.1'
+	testImplementation 'io.rest-assured:json-path:4.2.1'
+	testImplementation 'io.rest-assured:xml-path:4.2.1'
+	implementation group: 'com.fasterxml.jackson.module', name: 'jackson-modules-java8', version: '2.8.5', ext: 'pom'
+	
 }
 
 test {
